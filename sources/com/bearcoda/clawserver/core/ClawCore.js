@@ -166,4 +166,5 @@ ClawCore.prototype.setServer = function( value ) {
 	}
 }
 
+__ClawCore = undefined;
 module.exports = ClawCore;

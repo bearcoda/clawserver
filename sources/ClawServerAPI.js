@@ -1,10 +1,5 @@
-
-/*
- *	TODO - 
- * 		> 1. Create Proxy server element
- * 		> 2. Create Parallel elements to add multiple server types
- * 		> 3. Create support ExpressJS
- * 		> 4. Create support for Socket.IO
+/* 
+ * @author Joebear
  */
  
 /**

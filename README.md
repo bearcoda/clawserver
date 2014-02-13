@@ -14,13 +14,8 @@ responsibility for damages resulting from the use of this product*
 
 ### v0.1.1
  * There were syntax errors in the ClawServerAPI class that would throw errors if you tried to create a server.
- * ProxyServer classes have been added to allow a proxy server setup. Please note this functionality requires bouncy API to be installed through command line or equivalent:
-				npm install bouncy
+ * ProxyServer classes have been added to allow a proxy server setup. Please note this functionality requires bouncy API to be installed through command line or equivalent.
  * ClawServerAPI class createServer now accepts an optional **type** argument to specify which type of server to create.
-				//Load API
-				var clawserverAPI = require('ClawServerAPI');
-				//Create server
-				var server = require('ClawServerAPI').createServer( 'proxy', './config.json' );
  * TLS and Proxy feature type classes are now deprecated and are built directly into the API.
 
 ## How To Use

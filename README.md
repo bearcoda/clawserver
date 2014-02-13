@@ -82,6 +82,5 @@ Since there is only one element to work with at the current moment you can use t
 				event.response.writeHead(200, {'Content-Type': 'text/plain'});
 				event.response.end('Hello World\n');
 			});
-Hope this helps and if you guys have issues or suggestions make sure to checkout ClawServer [Git page](https://github.com/bearcoda/clawserver).
 
 

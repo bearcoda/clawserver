@@ -14,14 +14,6 @@ var FeatureTypes = function() {};
 FeatureTypes.LOAD = 'load';
 
 /**
- * Indicates this is the TLS feature used for SSL operations [deprecated]
- * @static
- * @constant
- * @type {string}
- */
-FeatureTypes.TLS = 'tls';
-
-/**
  * Indicates this is the Cluster feature used for working with multiple processors
  * @static
  * @constant
@@ -36,14 +28,6 @@ FeatureTypes.CLUSTER = 'cluster';
  * @type {string}
  */
 FeatureTypes.WEB_REQUEST = 'webRequest';
-
-/**
- * Indicates this is the Proxy feature used for working with multiple hosts and redirecting requests
- * @static
- * @constant
- * @type {string}
- */
-FeatureTypes.PROXY = 'proxy';
 
 /**
  * Indicates this is the Media feature used for working with media files on the server [Note: this feature is not yet supported]

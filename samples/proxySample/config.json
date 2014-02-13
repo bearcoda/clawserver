@@ -1,0 +1,14 @@
+{
+	"port" : 80,
+	"cores" : 1,
+	"proxyPaths" : [
+		{
+			"host" : "Enter Custom Sub Domain Here",
+			"forwardPort": 8080
+		},
+		{
+			"host" : "Enter Custom Sub Domain Here",
+			"forwardPort": 8081
+		}
+	]
+}

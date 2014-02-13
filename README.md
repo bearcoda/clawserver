@@ -1,4 +1,4 @@
-# ClawServer API v0.1 [alpha]
+# ClawServer API v0.1.1 [alpha]
 
 ## Overview
 
@@ -10,12 +10,25 @@ Those are just some examples but with time there should be much more functionali
 responsibility for damages resulting from the use of this product*
 <br><br>
 
+## What's New?
+
+### v0.1.1
+ * There were syntax errors in the ClawServerAPI class that would throw errors if you tried to create a server.
+ * ProxyServer classes have been added to allow a proxy server setup. Please note this functionality requires bouncy API to be installed through command line or equivalent:
+			npm install bouncy
+   For information on configuration settings please checkout the [ProxyConfiguration](ProxyConfiguration.html) class.
+ * ClawServerAPI class createServer now accepts an optional **type** argument to specify which type of server to create.
+			//Load API
+			var clawserverAPI = require('ClawServerAPI');
+			//Create server
+			var server = require('ClawServerAPI').createServer( 'proxy', './config.json' );
+ * TLS and Proxy feature type classes are now deprecated and are built directly into the API.
+
 ## How To Use
 
-Except for configurations, currently it's not too important to know what each does since there is only one ServerElement available. However, it does help in case you
-want to create your own elements. ClawServer primarily works with four main components. 
+ClawServer primarily works with four main components. 
 
- * ServerConfiguration - Handles loading of configurations to use with the server. The configuration accepts an object or a string path
+ * [ServerConfiguration](ServerConfiguration.html) - Handles loading of configurations to use with the server. The configuration accepts an object or a string path
  to a JSON formatted file.
  
 			//Load API
@@ -29,7 +42,7 @@ want to create your own elements. ClawServer primarily works with four main comp
 			...or
 			var configuration = new ServerConfiguration( {host:'localhost', port:8080, cores:1} );
  
- * ServerLoader - Handles loading server objects or dependencies the ClawServer may use.
+ * [ServerLoader](ServerLoader.html) - Handles loading server objects or dependencies the ClawServer may use.
  
 			...
 			//Load loader class
@@ -38,7 +51,7 @@ want to create your own elements. ClawServer primarily works with four main comp
 			//Create new loader instance
 			var loader = new ServerLoader();
  
- * ServerElement - Uses both loader and configuration to load, manage, and run the server.
+ * [ServerElement](ServerElement.html) - Uses both loader and configuration to load, manage, and run the server.
  
 			...
 			//Load element class
@@ -47,7 +60,7 @@ want to create your own elements. ClawServer primarily works with four main comp
 			//Create new instance and assign configuration and loader instances
 			var element = new ServerElement( configuration, loader );
  
- * ClawServer - The main server that manages data and events coming from the element.
+ * [ClawServer](ClawServer.html) - The main server that manages data and events coming from the element.
  
 			...
 			//Load server class
@@ -75,5 +88,6 @@ Since there is only one element to work with at the current moment you can use t
 				event.response.writeHead(200, {'Content-Type': 'text/plain'});
 				event.response.end('Hello World\n');
 			});
+Hope this helps and if you guys have issues or suggestions make sure to checkout ClawServer [Git page](https://github.com/bearcoda/clawserver).
 
 

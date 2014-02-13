@@ -117,11 +117,9 @@ WebRequestFeature.prototype.createServer = function( callback ) {
 			cert: fs.readFileSync( this.loadFeature.configuration.tls_cert )
 		};
 		
-		server = this.loadFeature.server.createServer( options, callback ).listen( Number(this.loadFeature.configuration.port) || 80, 
-																				   this.loadFeature.configuration.host || 'localhost' );
+		server = this.loadFeature.server.createServer( options, callback ).listen( Number(this.loadFeature.configuration.port) || 80, this.loadFeature.configuration.host );
 	}else{
-		server = this.loadFeature.server.createServer( callback ).listen( Number(this.loadFeature.configuration.port) || 80, 
-																		  this.loadFeature.configuration.host || 'localhost' );
+		server = this.loadFeature.server.createServer( callback ).listen( Number(this.loadFeature.configuration.port) || 80, this.loadFeature.configuration.host);
 	}
 	return server;
 }

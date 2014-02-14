@@ -84,6 +84,7 @@ WebRequestFeature.prototype.startServer = function() {
 		(cluster.isMaster && !this.masterServe) ) return;
 		
 	this.server = this.createServer( delegate(this, this.onRequest) );
+	this.serverCreated();
 }
  
 /**
@@ -96,8 +97,27 @@ WebRequestFeature.prototype.stopServer = function() {
 	if( !this.server || 
 		(cluster.isMaster && !this.masterServe) ) return;
 	
+	this.serverDestroy();
 	this.server.close();
 	this.server = undefined;
+}
+
+/**
+ * Fires when the server has been created
+ * @method
+ * @protected
+ */
+WebRequestFeature.prototype.serverCreated = function() {
+	
+}
+
+/**
+ * Fires when the server is about to be destroyed
+ * @method
+ * @protected
+ */
+WebRequestFeature.prototype.serverDestroy = function() {
+	
 }
 
 /**

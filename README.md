@@ -1,4 +1,4 @@
-# ClawServer API v0.1.1 [alpha]
+# ClawServer API v0.1.1.1 [alpha]
 
 ## Overview
 
@@ -12,9 +12,17 @@ responsibility for damages resulting from the use of this product*
 
 ## What's New?
 
+### v0.1.1.1
+ * ProxyServer classes now allow you to also detect paths and redirect.
+ * Switched out Bouncy dependency and now using http-proxy instead so when using ProxyServer classes make sure to install http-proxy via npm.
+
 ### v0.1.1
  * There were syntax errors in the ClawServerAPI class that would throw errors if you tried to create a server.
  * ProxyServer classes have been added to allow a proxy server setup. Please note this functionality requires bouncy API to be installed through command line or equivalent.
+<<<<<<< HEAD
+   For information on configuration settings please checkout the ProxyConfiguration class.
+=======
+>>>>>>> a8b484f628e0902b79781c32bacab4f90bd04734
  * ClawServerAPI class createServer now accepts an optional **type** argument to specify which type of server to create.
  * TLS and Proxy feature type classes are now deprecated and are built directly into the API.
 
@@ -22,7 +30,7 @@ responsibility for damages resulting from the use of this product*
 
 ClawServer primarily works with four main components. 
 
- * [ServerConfiguration](ServerConfiguration.html) - Handles loading of configurations to use with the server. The configuration accepts an object or a string path
+ * ServerConfiguration - Handles loading of configurations to use with the server. The configuration accepts an object or a string path
  to a JSON formatted file.
  
 			//Load API
@@ -36,7 +44,7 @@ ClawServer primarily works with four main components.
 			...or
 			var configuration = new ServerConfiguration( {host:'localhost', port:8080, cores:1} );
  
- * [ServerLoader](ServerLoader.html) - Handles loading server objects or dependencies the ClawServer may use.
+ * ServerLoader - Handles loading server objects or dependencies the ClawServer may use.
  
 			...
 			//Load loader class
@@ -45,7 +53,7 @@ ClawServer primarily works with four main components.
 			//Create new loader instance
 			var loader = new ServerLoader();
  
- * [ServerElement](ServerElement.html) - Uses both loader and configuration to load, manage, and run the server.
+ * ServerElement - Uses both loader and configuration to load, manage, and run the server.
  
 			...
 			//Load element class
@@ -54,7 +62,7 @@ ClawServer primarily works with four main components.
 			//Create new instance and assign configuration and loader instances
 			var element = new ServerElement( configuration, loader );
  
- * [ClawServer](ClawServer.html) - The main server that manages data and events coming from the element.
+ * ClawServer - The main server that manages data and events coming from the element.
  
 			...
 			//Load server class
@@ -82,5 +90,8 @@ Since there is only one element to work with at the current moment you can use t
 				event.response.writeHead(200, {'Content-Type': 'text/plain'});
 				event.response.end('Hello World\n');
 			});
+<<<<<<< HEAD
+=======
 
 
+>>>>>>> a8b484f628e0902b79781c32bacab4f90bd04734

@@ -21,15 +21,17 @@ var ProxyConfiguration = function( data ) {
 utils.inherits( ProxyConfiguration, ServerConfiguration );
 
 /**
- * The proxy configuration paths for automatically redirecting requests to other servers and/or ports. Holds an array of objects which should each hold 3 properties. 
- * The first is the <b>host</b> which is the request host or path to detect. The the second is <b>fowardHost</b> which is the host to redirect the request to. Defaults 
- * to localhost if it is not provided. The third is <b>forwardPort</b> which is the port to forward the requests to. This defaults to port 80 if not provided.
+ * The proxy configuration paths are for automatically redirecting requests to other servers and/or ports. Holds an array of objects which should each hold 3 properties. 
+ * The first is one of two options, <b>host</b> which is the request host to detect or <b>path</b> which is the path to detect. The the second property is <b>fowardHost</b> 
+ * which is the host to redirect the request to. Defaults to localhost if it is not provided. The third property is <b>forwardPort</b> which is the port to forward the requests 
+ * to. This defaults to port 80 if not provided.<br><b>Note: If you are detecting sub-domains then do not set a host in the main options. Keep in mind that you will need to configure
+ * your server settings to allow connections to the sub-domains or ports you want your server to detect.</b>
  * @member
  * @type {Array.<object>}
  * @example <pre><code>//Import ClawServer API
  * var clawserverAPI = require('ClawServerAPI');
  * 
- * //Create options for proxy server [Note:Do not provided host]
+ * //Create options for proxy server
  * var options = {
  * 		port: 80,
  * 		proxyPaths: [
@@ -38,7 +40,7 @@ utils.inherits( ProxyConfiguration, ServerConfiguration );
  * 			forwardHost: "myCustomDomain2.com"
  * 		},
  * 		{
- * 			host:"sub2.myCustomDomain.com",
+ * 			path:"/myCustomWeb",
  * 			forwardPort: 8080
  * 		}]
  * 	}
@@ -49,5 +51,12 @@ utils.inherits( ProxyConfiguration, ServerConfiguration );
  * </code></pre>
  */
 ProxyConfiguration.prototype.proxyPaths = null;
+
+/**
+ * Specifies whether to allow websocket forward
+ * @member
+ * @type {Boolean}
+ */
+ProxyConfiguration.prototype.websockets = true;
 
 module.exports = ProxyConfiguration;

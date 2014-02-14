@@ -18,11 +18,7 @@ responsibility for damages resulting from the use of this product*
 
 ### v0.1.1
  * There were syntax errors in the ClawServerAPI class that would throw errors if you tried to create a server.
- * ProxyServer classes have been added to allow a proxy server setup. Please note this functionality requires bouncy API to be installed through command line or equivalent.
-<<<<<<< HEAD
-   For information on configuration settings please checkout the ProxyConfiguration class.
-=======
->>>>>>> a8b484f628e0902b79781c32bacab4f90bd04734
+ * ProxyServer classes have been added to allow a proxy server setup. Please note this functionality requires bouncy API to be installed through npm.
  * ClawServerAPI class createServer now accepts an optional **type** argument to specify which type of server to create.
  * TLS and Proxy feature type classes are now deprecated and are built directly into the API.
 
@@ -90,8 +86,3 @@ Since there is only one element to work with at the current moment you can use t
 				event.response.writeHead(200, {'Content-Type': 'text/plain'});
 				event.response.end('Hello World\n');
 			});
-<<<<<<< HEAD
-=======
-
-
->>>>>>> a8b484f628e0902b79781c32bacab4f90bd04734

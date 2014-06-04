@@ -14,41 +14,66 @@ var utils = require('util');
  * @param bubbles {boolean} - A boolean value indicating if the event should fire down across listeners. Defaults to false
  * @param cancelable {boolean} - A boolean value indicating if the event chain be canceled. Defaults to false
  */
-var WebRequestEvent = function( type, data, bubbles, cancelable ) {
+var HttpEvent = function( type, data, bubbles, cancelable ) {
 	
 	Event.call( this, type, data, bubbles, cancelable );
 	
 	//Fill in the blanks :P
 	this.request = data.request;
 	this.response = data.response;
+	this.head = data.head;
 }
 
-utils.inherits( WebRequestEvent, Event );
+utils.inherits( HttpEvent, Event );
 
 /**
- * Holds the constant value used for the load state change event
+ * Holds the constant value used for http connect
  * @static
  * @constant
  * @type {string}
  */
-WebRequestEvent.WEB_REQUEST = 'webRequest';
+HttpEvent.CONNECT = 'connect';
+
+/**
+ * Holds the constant value used for http upgrade
+ * @static
+ * @constant
+ * @type {string}
+ */
+HttpEvent.UPGRADE = 'upgrade';
+
+/**
+ * Holds the constant value used for the http requests
+ * @static
+ * @constant
+ * @type {string}
+ */
+HttpEvent.WEB_REQUEST = 'webRequest';
 
 
 /**
- * Holds the loadState value that changed
+ * Holds the instance of the node IncomingMessage class
  * @member
  * @readonly
- * @type {string}
+ * @type {http.IncomingMessage}
  */
-WebRequestEvent.prototype.request;
+HttpEvent.prototype.request;
 
 /**
- * Holds the old loadState value that changed [Only for loader state events]
+ * Holds the instance of the node ServerResponse class
  * @member
  * @readonly
- * @type {string}
+ * @type {http.ServerResponse}
  */
-WebRequestEvent.prototype.response;
+HttpEvent.prototype.response;
+
+/**
+ * Holds the call head
+ * @member
+ * @readonly
+ * @type {object}
+ */
+HttpEvent.prototype.head;
 
 /**
  * Holds the loader base instance which fired the change call
@@ -56,7 +81,7 @@ WebRequestEvent.prototype.response;
  * @readonly
  * @type {LoaderBase}
  */
-WebRequestEvent.prototype.server;
+HttpEvent.prototype.server;
 
 /*
  * PUBLIC API
@@ -65,10 +90,10 @@ WebRequestEvent.prototype.server;
 /**
  * Clones the event object
  * @method
- * @returns newWebRequestEvent {ServerElementEvent} - The new web request event that was cloned
+ * @returns newHttpEvent {ServerElementEvent} - The new web request event that was cloned
  */
-WebRequestEvent.prototype.clone = function() {
-	return new WebRequestEvent( this.type, this.data, this.bubbles, this.cancelable );
+HttpEvent.prototype.clone = function() {
+	return new HttpEvent( this.type, this.data, this.bubbles, this.cancelable );
 }
 
-module.exports = WebRequestEvent;
+module.exports = HttpEvent;

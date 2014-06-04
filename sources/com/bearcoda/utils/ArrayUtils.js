@@ -25,7 +25,7 @@ ArrayUtils.splice = function( itemList, startIndex, deleteCount, items )
 	//If zero delete count then ignore
 	itemList.splice( startIndex, deleteCount );
 	
-	if ( items != undefined ) itemList = pushAt( itemList, items, startIndex );
+	if ( items != undefined ) itemList = ArrayUtils.pushAt( itemList, items, startIndex );
 	return itemList;
 }
 

@@ -3,12 +3,12 @@
 var ClawCore = require( 'com/bearcoda/clawserver/core/ClawCore' );
 var FeatureTypes = require( 'com/bearcoda/clawserver/features/FeatureTypes' );
 var LoadEvent = require( 'com/bearcoda/clawserver/events/LoadEvent' );
-//var LoadEvent = require( 'com/bearcoda/clawserver/events/WebRequestEvent' );
 var ServerEvent = require( 'com/bearcoda/clawserver/events/ServerEvent' );
 var LoadState = require( 'com/bearcoda/clawserver/states/LoadState' );
 var ServerStates = require( 'com/bearcoda/clawserver/states/ServerStates' );
 var ServerElementBase = require( 'com/bearcoda/clawserver/servers/ServerElementBase' );
 var ServerElement = require( 'com/bearcoda/clawserver/servers/ServerElement' );
+var SocketIOFeature = require( 'com/bearcoda/clawserver/features/SocketIOFeature' );
 var ServerConfigurationBase = require( 'com/bearcoda/clawserver/core/ServerConfigurationBase' );
 var ServerConfiguration = require( 'com/bearcoda/clawserver/servers/ServerConfiguration' );
 
@@ -17,7 +17,15 @@ var EventDispatcher = require('com/bearcoda/events/EventDispatcher');
 var delegate = require('com/bearcoda/utils/Utilities').delegate;
 
 //NodeJS Classes
-var utils = require('util'); 
+var utils = require('util');
+
+/*
+ * TODO - 
+ * 	x 1. Need to add SocketIO API to ClawServer main class
+ *  > 2. Update all code docs
+ *  x 3. Test all updates
+ *  > 4. Release as version 0.2 [beta]
+ */
 
 /**
  * @class 
@@ -49,7 +57,19 @@ var ClawServer = function( server ) {
 /**
  * Fires when a web request is made
  * @event ClawServer#webRequest
- * @type {WebRequestEvent}
+ * @type {HttpEvent}
+ */
+
+/**
+ * Fires when a client has connected to the server. Available only for socket type servers.
+ * @event ClawServer#connection
+ * @type {SocketEvent}
+ */
+ 
+/**
+ * Fires when a client has disconnected. Available only for socket type servers.
+ * @event ClawServer#disconnect
+ * @type {SocketEvent}
  */
  
 utils.inherits( ClawServer, ClawCore );
@@ -75,6 +95,20 @@ ClawServer.prototype.state;
 ClawServer.prototype.canLoad;
 
 /*
+ * PUBLIC API
+ */
+
+ClawServer.prototype.emit = function( handlerName, data ) {
+	
+	var socketFeature = this.server.getFeature(FeatureTypes.SOCKET);
+	if( socketFeature && (socketFeature instanceof SocketIOFeature) ) {
+		socketFeature.emit( handlerName, data );
+	}else{
+		console.log('#Error# This functionality is not supported!');
+	}
+}
+ 
+/*
  * PROTECTED API
  */
 
@@ -99,15 +133,27 @@ ClawServer.prototype.onFeatureChanged = function( featureType, add ) {
 				if (loadState != LoadState.READY && loadState != LoadState.LOADING) this.__load();
 			}							
 			break;
-		case FeatureTypes.WEB_REQUEST : 
+		case FeatureTypes.HTTP : 
 			// && this.server.getFeature(featureType).loadState == LoadState.READY
 			//this.changeListeners(add, featureType, WebRequestEvent.WEB_REQUEST, this._loadStateChange );		
 			if( this.canLoad ) {
 				if( add ) 
 				{
-					this.server.getFeature(FeatureTypes.WEB_REQUEST).startServer();
+					this.server.getFeature(FeatureTypes.HTTP).startServer();
+					if( this.server.hasFeature('socket.io') ) this.server.getFeature('socket.io').startServer();
 				}else{
-					this.server.getFeature(FeatureTypes.WEB_REQUEST).stopServer();
+					this.server.getFeature(FeatureTypes.HTTP).stopServer();
+					if( this.server.hasFeature('socket.io') ) this.server.getFeature('socket.io').stopServer();
+				}
+			}
+			break;
+		case FeatureTypes.SOCKET :
+			if( this.canLoad ) {
+				if( add ) 
+				{
+					this.server.getFeature(FeatureTypes.SOCKET).startServer();
+				}else{
+					this.server.getFeature(FeatureTypes.SOCKET).stopServer();
 				}
 			}
 			break;

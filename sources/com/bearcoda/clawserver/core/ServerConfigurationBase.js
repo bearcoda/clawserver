@@ -48,7 +48,7 @@ utils.inherits( ServerConfigurationBase, EventDispatcher );
 ServerConfigurationBase.prototype.ready;
 
 /** @private */
-__ServerConfigurationBase = ServerConfigurationBase.prototype;
+var __ServerConfigurationBase = ServerConfigurationBase.prototype;
 
 /*
  * PUBLIC API

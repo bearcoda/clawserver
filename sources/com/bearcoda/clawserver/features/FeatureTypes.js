@@ -27,7 +27,23 @@ FeatureTypes.CLUSTER = 'cluster';
  * @constant
  * @type {string}
  */
-FeatureTypes.WEB_REQUEST = 'webRequest';
+FeatureTypes.HTTP = 'http';
+
+/**
+ * Indicates this is the socket feature for tracking socket events and functionality
+ * @static
+ * @constant
+ * @type {string}
+ */
+FeatureTypes.SOCKET = 'socket';
+
+/**
+ * Indicates this is the static serve feature for serving static files
+ * @static
+ * @constant
+ * @type {string}
+ */
+FeatureTypes.STATIC_SERVE = 'staticServe';
 
 /**
  * Indicates this is the Media feature used for working with media files on the server [Note: this feature is not yet supported]

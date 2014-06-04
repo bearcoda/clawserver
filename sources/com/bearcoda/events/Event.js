@@ -17,7 +17,7 @@ var Event = function( type, data, bubbles, cancelable )
 	this.isImmediatePropagationStopped = false;
 	this.isPropagationStopped = false;
 	
-	eventPhase = EventPhase.AT_TARGET;
+	this.eventPhase = EventPhase.AT_TARGET;
 	
 	this.type = type;
 	this.data = data;
@@ -163,5 +163,4 @@ Event.prototype.clone = function()
 	return new Event(this.type, this.data, this.bubbles, this.cancelable);
 }
 
-_Event = undefined;
 module.exports = Event;

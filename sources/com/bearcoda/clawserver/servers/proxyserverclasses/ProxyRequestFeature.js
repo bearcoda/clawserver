@@ -1,7 +1,7 @@
 
 //ClawServer Classes
-var WebRequestEvent = require('com/bearcoda/clawserver/events/WebRequestEvent');
-var WebRequestFeature = require('com/bearcoda/clawserver/features/WebRequestFeature');
+var HttpEvent = require('com/bearcoda/clawserver/events/HttpEvent');
+var HttpFeature = require('com/bearcoda/clawserver/features/HttpFeature');
 
 //BearCoda Classes
 var delegate = require('com/bearcoda/utils/Utilities').delegate;
@@ -15,13 +15,13 @@ var utils = require('util');
  * @class
  * @classdesc ProxyRequestFeature class serves as a base for handling ProxyRequestFeature functionality
  * @constructor
- * @extends clawserver/features/WebRequestFeature
- * @param loaderfeature {ServerLoadFeature} - The server load feature object
+ * @extends clawserver/features/HttpFeature
+ * @param loadfeature {ServerLoadFeature} - The server load feature object
  */
 var ProxyRequestFeature = function( loadFeature ) {
 	
 	//Call constructor with feature type
-	WebRequestFeature.call( this, loadFeature );
+	HttpFeature.call( this, loadFeature );
 	
 	//Initiate host maps
 	this.createHostMaps();
@@ -30,7 +30,7 @@ var ProxyRequestFeature = function( loadFeature ) {
 	this._proxy = httpProxy.createProxyServer({});
 }
 
-utils.inherits( ProxyRequestFeature, WebRequestFeature );
+utils.inherits( ProxyRequestFeature, HttpFeature );
 
 var __ProxyRequestFeature = ProxyRequestFeature.prototype;
 	__ProxyRequestFeature._proxy;
@@ -86,7 +86,7 @@ ProxyRequestFeature.prototype.onRequest = function( req, res ) { //, redirect ) 
 	if( mapSlot ) this._proxy.web( req, res, {target:'http'+(this.forwardMaps[mapSlot].secure == true ? 's' : '')+'://'+this.forwardMaps[mapSlot].host+':'+this.forwardMaps[mapSlot].port} );
 	
 	//Dispatch event letting know we got a request
-	this.dispatchEvent( new WebRequestEvent(WebRequestEvent.WEB_REQUEST, {request:req, response:res}) );
+	this.dispatchEvent( new HttpEvent(HttpEvent.WEB_REQUEST, {request:req, response:res}) );
 }
 
 /*
@@ -94,10 +94,19 @@ ProxyRequestFeature.prototype.onRequest = function( req, res ) { //, redirect ) 
  */
 
 __ProxyRequestFeature.serverCreated = function() {
-	if( this.loadFeature.configuration.websockets != false ) this.server.on( 'upgrade', delegate(this, this.__onUpgrade) );
+	if( this.loadFeature.configuration.websockets != false ) this.server.on( 'upgrade', delegate(this, this.onHTTPUpgrade) );
 }
- 
-__ProxyRequestFeature.__onUpgrade = function( req, socket, head ) {
+
+__ProxyRequestFeature.getListenerCallBack = function( eventType )
+{
+	if( eventType == 'upgrade' ) return;
+	return HttpFeature.prototype.getListenerCallBack.call( this, eventType );
+}
+
+__ProxyRequestFeature.onHTTPUpgrade = function( req, socket, head ) {
+	
+	//Call super
+	HttpFeature.prototype.onHTTPUpgrade.call( this, req, socket, head );
 	
 	//If websockets are used then redirect that too
 	var mapSlot = this.__getMapSlot(req);
@@ -106,9 +115,9 @@ __ProxyRequestFeature.__onUpgrade = function( req, socket, head ) {
 
 __ProxyRequestFeature.__getMapSlot = function( req ) {
 	
-	var mapSlot;
-	if( this.forwardMaps[req.headers.host] != undefined ) {
-		mapSlot = req.headers.host;
+	var mapSlot, host = req.headers.host.replace(/\:(\d+)/i, '');
+	if( this.forwardMaps[host] != undefined ) {
+		mapSlot = host;
 	}else{
 		var tempSlot = url.parse(req.url).pathname;
 		if( tempSlot.lastIndexOf('/') > 0 ) tempSlot = '/' + tempSlot.split('/')[1];

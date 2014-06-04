@@ -28,8 +28,7 @@ utils.inherits( ProxyConfiguration, ServerConfiguration );
  * your server settings to allow connections to the sub-domains or ports you want your server to detect.</b>
  * @member
  * @type {Array.<object>}
- * @example <pre><code>//Import ClawServer API
- * var clawserverAPI = require('ClawServerAPI');
+ * @example <pre><code>
  * 
  * //Create options for proxy server
  * var options = {
@@ -45,7 +44,7 @@ utils.inherits( ProxyConfiguration, ServerConfiguration );
  * 		}]
  * 	}
  * //Create proxy configuration instance and assign options
- * var ProxyConfiguration = clawserverAPI.require('clawserver/servers/proxyserverclasses/ProxyConfiguration');
+ * var ProxyConfiguration = require('com/bearcoda/clawserver/servers/proxyserverclasses/ProxyConfiguration');
  * var configuration = new ProxyConfiguration(options);
  * ...
  * </code></pre>

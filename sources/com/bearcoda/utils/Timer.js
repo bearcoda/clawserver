@@ -126,7 +126,7 @@ Timer.prototype.start = function( autoReset )
 Timer.prototype.stop = function()
 {
 	if ( this._intervalID == null ) return;
-	clearInterval(_intervalID);
+	clearInterval(this._intervalID);
 	this._intervalID = null;
 	
 }

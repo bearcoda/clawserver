@@ -3,7 +3,8 @@
 var FeatureTypes = require( 'com/bearcoda/clawserver/features/FeatureTypes' );
 var LoadEvent = require( 'com/bearcoda/clawserver/events/LoadEvent' );
 var ServerElementEvent = require( 'com/bearcoda/clawserver/events/ServerElementEvent' );
-var WebRequestEvent = require( 'com/bearcoda/clawserver/events/WebRequestEvent' );
+var HttpEvent = require( 'com/bearcoda/clawserver/events/HttpEvent' );
+var SocketEvent = require( 'com/bearcoda/clawserver/events/SocketEvent' );
 
 //BearCoda Classes
 var EventDispatcher = require('com/bearcoda/events/EventDispatcher');
@@ -32,8 +33,15 @@ var ClawCore = function() {
 	this.eventMaps = {};
 	this.eventMaps[LoadEvent.LOAD_STATE_CHANGE] = FeatureTypes.LOAD;
 	
-	//WebRequest
-	this.eventMaps[WebRequestEvent.WEB_REQUEST] = FeatureTypes.WEB_REQUEST;
+	//HTTP events
+	this.eventMaps[HttpEvent.CONNECT] = FeatureTypes.HTTP;
+	this.eventMaps[HttpEvent.UPGRADE] = FeatureTypes.HTTP;
+	this.eventMaps[HttpEvent.WEB_REQUEST] = FeatureTypes.HTTP;
+	
+	//Socket events
+	this.eventMaps[SocketEvent.CONNECTION] = FeatureTypes.SOCKET;
+	this.eventMaps[SocketEvent.DISCONNECT] = FeatureTypes.SOCKET;
+	this.eventMaps[SocketEvent.CALL] = FeatureTypes.SOCKET;
 }
 
 utils.inherits( ClawCore, EventDispatcher );
@@ -67,18 +75,20 @@ ClawCore.prototype.eventMaps;
 
 ClawCore.prototype.on = function( eventType, handler, useCapture, priority, useWeakReference ) {
 	
-	var hadEventListener = this.hasEventListener(eventType);		
+	var hadEventListener = this.hasEventListener(eventType), 
+		featureType = this.__getEventFeatureType(eventType);
 	
 	EventDispatcher.prototype.on.call( this, eventType, handler, useCapture, priority, useWeakReference );
-	if ( this.server && !hadEventListener && this.eventMaps[eventType] != undefined ) {				
-		this.__changeCoreListeners(true, this.eventMaps[eventType], eventType);	
+	if ( this.server && !hadEventListener && featureType != undefined ) {				
+		this.__changeCoreListeners(true, featureType, eventType);	
 	}		
 }
 
 ClawCore.prototype.off = function( eventType, handler, useCapture ) {
 	
 	EventDispatcher.prototype.off.call( this, eventType, handler, useCapture );
-	if ( this.server && !this.hasEventListener(eventType) && this.eventMaps[eventType] != undefined ) this.__changeCoreListeners(false, eventMaps[eventType], eventType);
+	var featureType = this.__getEventFeatureType(eventType);
+	if ( this.server && !this.hasEventListener(eventType) && featureType != undefined ) this.__changeCoreListeners(false, featureType, eventType);
 }
 
 /*
@@ -92,15 +102,31 @@ ClawCore.prototype.onFeatureChanged = function( featureType, add ) {
 		case FeatureTypes.LOAD : 
 			this.__changeCoreListeners(add, featureType, LoadEvent.LOAD_STATE_CHANGE);
 			break;
-		case FeatureTypes.WEB_REQUEST : 
-			this.__changeCoreListeners(add, featureType, WebRequestEvent.WEB_REQUEST);
+		case FeatureTypes.HTTP : 
+			this.__changeCoreListeners(add, featureType, HttpEvent.CONNECT);
+			this.__changeCoreListeners(add, featureType, HttpEvent.UPGRADE);
+			this.__changeCoreListeners(add, featureType, HttpEvent.WEB_REQUEST);
 			break;
+		case FeatureTypes.SOCKET :
+			this.__changeCoreListeners(add, featureType, SocketEvent.CONNECTION);
+			this.__changeCoreListeners(add, featureType, SocketEvent.DISCONNECT);
+			this.__changeCoreListeners(add, featureType, SocketEvent.CALL);
+		case "socket.io" :
+			this.__changeCoreListeners(add, featureType, SocketEvent.CONNECTION);
+			this.__changeCoreListeners(add, featureType, SocketEvent.DISCONNECT);
+			this.__changeCoreListeners(add, featureType, SocketEvent.CALL);
 	}
 }
  
 /*
  * PRIVATE API
  */
+
+__ClawCore.__getEventFeatureType = function(eventType) { 
+	return this.eventMaps[eventType] == FeatureTypes.SOCKET && 
+		   this.server && 
+		   this.server.hasFeature('socket.io') ? 'socket.io' : this.eventMaps[eventType]
+}
 
 __ClawCore.__onFeatureAdd = function(event) {				
 	this.onFeatureChanged(event.data, true);				
